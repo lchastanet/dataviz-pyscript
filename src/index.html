@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <script defer src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <title>Dataviz</title>
+    <py-env>
+        - plotly
+        - pandas
+    </py-env>
+  </head>
+  <body>
+    <div id="plotly"></div>
+    <div id="sourceValues">
+      <h2>Source values :</h2>
+    </div>
+    <div id="values">
+      <h2>Values :</h2>
+    </div>
+    <div id="targetValues">
+      <h2>Target values :</h2>
+    </div>
+    <py-script output="plotly">
+        from js import Plotly, JSON
+        import plotly.graph_objects as go
+
+        sourceValues = [0, 1, 0, 2, 3, 3]
+        targetValues = [2, 3, 3, 4, 4, 5]
+        values = [8, 4, 2, 8, 4, 2]
+            
+        fig = go.Figure (data=[go.Sankey (
+            node = dict(
+            pad = 15,
+            thickness = 20,
+            line = dict(color = "black", width = 3.5),
+            label = ["Al", "A2", "B1", "B2", "C1", "C2"],
+            color = "blue"
+            ),
+            link = dict(
+            source = sourceValues, # indices correspond to labels, eg A1, A2, A1, B1,
+            target = targetValues,
+            value = values
+        ))])
+
+        Plotly.react('plotly', JSON.parse(fig.to_json()))
+
+        def generateFrogs(val, node):
+          for data in val:
+              for x in range(data):
+                  img = document.createElement("img")
+                  img.height = '25'
+                  img.width = '25'
+                  img.src = "https://res.cloudinary.com/daohq6hbq/image/upload/v1675354070/pngwing.com_zbtzxx.png"
+                  document.querySelector("#" + node).append(img)
+
+        generateFrogs(sourceValues, "sourceValues")
+        generateFrogs(targetValues, "targetValues")
+        generateFrogs(values, "values")
+    </py-script>
+  </body>
+</html>
